@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "LR2fOoRIQkbdGaz2Vqj39HBM5+gBRVX+ms3z826QZCc=",
+  "Source": "catalog-service",
+  "BasePath": "_content/catalog-service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
