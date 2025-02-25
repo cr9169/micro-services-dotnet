@@ -114,6 +114,21 @@ public class ErrorHandlingMiddleware
         context.Response.ContentType = "application/json";
 
         // Map different exceptions to appropriate status codes
+        // New syntax, the same as: 
+        /*
+        switch (ex)
+        {
+            case CatalogItemNotFoundException:
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                break;
+            case CatalogItemRepositoryException:
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                break;
+            default:
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                break;
+        }
+        */
         context.Response.StatusCode = ex switch
         {
             CatalogItemNotFoundException => StatusCodes.Status404NotFound,
@@ -132,6 +147,9 @@ public class ErrorHandlingMiddleware
                 : null
         };
 
+        // Converts the errorResponse (JSON object) to a JSON string,
+        // and Writing it for the response.
+        // "return" - stops the continuation of the execution, so that there are no further attempts to send a reply.
         return context.Response.WriteAsJsonAsync(errorResponse);
     }
 }

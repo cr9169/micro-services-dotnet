@@ -91,29 +91,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Checks if the application is running in the development environment.
-if (app.Environment.IsDevelopment())
-{
-    // Enables Swagger middleware to generate the API documentation.
-    app.UseSwagger(options =>
-    {
-        options.RouteTemplate = "swagger/catalog/service/{documentName}/swagger.json";
-    });
-
-    // Configures the Swagger UI for interactive API documentation.
-    app.UseSwaggerUI(c =>
-    {
-        // Defines the Swagger JSON file location and sets the API title.
-        c.SwaggerEndpoint("/swagger/catalog/service/v1/swagger.json", "Catalog Service API - V1");
-        // Sets Swagger UI as the default page by removing the /swagger prefix.
-        c.RoutePrefix = string.Empty;
-    });
-}
-
-// Maps all controller routes to handle HTTP requests in the application.
-// This ensures that API endpoints defined in controllers (marked with [ApiController]) are correctly registered and accessible.
-app.MapControllers();
-
 /// <summary>
 /// Registers the ErrorHandlingMiddleware in the application's middleware pipeline.
 /// 
@@ -156,6 +133,30 @@ app.MapControllers();
 ///    - Client gets successful response
 /// </summary>
 app.UseErrorHandling();
+
+// Checks if the application is running in the development environment.
+if (app.Environment.IsDevelopment())
+{
+    // Enables Swagger middleware to generate the API documentation.
+    app.UseSwagger(options =>
+    {
+        options.RouteTemplate = "swagger/catalog/service/{documentName}/swagger.json";
+    });
+
+    // Configures the Swagger UI for interactive API documentation.
+    app.UseSwaggerUI(c =>
+    {
+        // Defines the Swagger JSON file location and sets the API title.
+        c.SwaggerEndpoint("/swagger/catalog/service/v1/swagger.json", "Catalog Service API - V1");
+        // Sets Swagger UI as the default page by removing the /swagger prefix.
+        c.RoutePrefix = string.Empty;
+    });
+}
+
+// Maps all controller routes to handle HTTP requests in the application.
+// This ensures that API endpoints defined in controllers (marked with [ApiController]) are correctly registered and accessible.
+app.MapControllers();
+
 
 // Add the health check endpoint
 app.MapHealthChecks("/health");
