@@ -2,7 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 public class CatalogItem
 {
-    public int Id { get; set; }
+    [Key]
+    public Guid Id { get; set; } = Guid.NewGuid(); // Changed from int to Guid with default value
 
     /// <summary>
     /// Using string.Empty as initial value instead of null:

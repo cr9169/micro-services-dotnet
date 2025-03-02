@@ -157,3 +157,4 @@ C:\Users\bargabay12\Desktop\micro-services-dotnet\catalog-service\bin\Debug\net9
 C:\Users\bargabay12\Desktop\micro-services-dotnet\catalog-service\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\bargabay12\Desktop\micro-services-dotnet\catalog-service\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\bargabay12\Desktop\micro-services-dotnet\catalog-service\obj\Debug\net9.0\catalog-service.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\bargabay12\Desktop\micro-services-dotnet\catalog-service\obj\Debug\net9.0\catalog-service.sourcelink.json

@@ -95,7 +95,7 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// <returns>The catalog item with the specified ID.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during database retrieval.</exception>
-    public async Task<CatalogItem> GetByIdAsync(int Id)
+    public async Task<CatalogItem> GetByIdAsync(Guid Id)
     {
         // Unique key for this specific item, using the Id (like template literals in JS: `catalog_item_${Id}`)
         string cacheKey = $"catalog_item_{Id}";
@@ -177,7 +177,7 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// <returns>The deleted catalog item.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during deletion.</exception>
-    public async Task<CatalogItem> DeleteByIdAsync(int Id)
+    public async Task<CatalogItem> DeleteByIdAsync(Guid Id)
     {
         try
         {
@@ -214,7 +214,7 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// <returns>The updated catalog item.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during update.</exception>
-    public async Task<CatalogItem> UpdateByIdAsync(int id, CatalogItem catalogItem)
+    public async Task<CatalogItem> UpdateByIdAsync(Guid id, CatalogItem catalogItem)
     {
         try
         {
@@ -253,7 +253,7 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// <returns>The updated catalog item.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during patching.</exception>
-    public async Task<CatalogItem> PatchByIdAsync(int Id, CatalogItemPatchDTO catalogItemDetails)
+    public async Task<CatalogItem> PatchByIdAsync(Guid Id, CatalogItemPatchDTO catalogItemDetails)
     {
         try
         {

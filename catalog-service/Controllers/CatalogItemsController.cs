@@ -133,7 +133,7 @@ public class CatalogItemsController : ControllerBase
     /// The response includes a general error message without exposing internal details.
     /// </summary>
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CatalogItem>> GetItemById(int id)
+    public async Task<ActionResult<CatalogItem>> GetItemById(Guid id)
     {
         try
         {
@@ -177,6 +177,7 @@ public class CatalogItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    // Tells ASP.NET Core to get data from request body
     public async Task<ActionResult<CatalogItem>> CreateItem([FromBody] CatalogItem item)
     {
         try
@@ -216,7 +217,8 @@ public class CatalogItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CatalogItem>> UpdateItem(int id, [FromBody] CatalogItem item)
+    // Tells ASP.NET Core to get data from request body
+    public async Task<ActionResult<CatalogItem>> UpdateItem(Guid id, [FromBody] CatalogItem item)
     {
         try
         {
@@ -263,7 +265,8 @@ public class CatalogItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CatalogItem>> PatchItem(int id, [FromBody] CatalogItemPatchDTO patchDto)
+    // Tells ASP.NET Core to get data from request body
+    public async Task<ActionResult<CatalogItem>> PatchItem(Guid id, [FromBody] CatalogItemPatchDTO patchDto)
     {
         try
         {
@@ -307,7 +310,7 @@ public class CatalogItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CatalogItem>> DeleteItem(int id)
+    public async Task<ActionResult<CatalogItem>> DeleteItem(Guid id)
     {
         try
         {
