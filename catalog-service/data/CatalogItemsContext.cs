@@ -10,8 +10,5 @@ public class CatalogItemsContext : DbContext
     // DbContextOptions<T> is a generic class that takes a DbContext type (T) and provides configuration options for it.
     // Here, DbContextOptions<CatalogItemsContext> ensures EF Core configures CatalogItemsContext with the correct database settings.
     // ": base(options)" - a call to the constructor of the base class, like super in java.
-    public CatalogItemsContext(DbContextOptions<CatalogItemsContext> options) : base(options)
-    {
-
-    }
+    public CatalogItemsContext(DbContextOptions<CatalogItemsContext> options) : base(options) {}
 }

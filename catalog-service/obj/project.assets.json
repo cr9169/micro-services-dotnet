@@ -9593,31 +9593,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bargabay12\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\BarGabay\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bargabay12\\Desktop\\micro-services-dotnet\\catalog-service\\catalog-service.csproj",
+      "projectUniqueName": "C:\\Users\\BarGabay\\Desktop\\micro-services-dotnet\\catalog-service\\catalog-service.csproj",
       "projectName": "catalog-service",
-      "projectPath": "C:\\Users\\bargabay12\\Desktop\\micro-services-dotnet\\catalog-service\\catalog-service.csproj",
-      "packagesPath": "C:\\Users\\bargabay12\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bargabay12\\Desktop\\micro-services-dotnet\\catalog-service\\obj\\",
+      "projectPath": "C:\\Users\\BarGabay\\Desktop\\micro-services-dotnet\\catalog-service\\catalog-service.csproj",
+      "packagesPath": "C:\\Users\\BarGabay\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\BarGabay\\Desktop\\micro-services-dotnet\\catalog-service\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\bargabay12\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\BarGabay\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
