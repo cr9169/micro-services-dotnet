@@ -1,13 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 public class CatalogItemUpdateDTO
 {
-    // Name of the catalog item
-    public string Name { get; set; }
+    [Required(ErrorMessage = "Name is required")]
+    [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters")]
+    public string Name { get; set; } = string.Empty;
 
-    // Description of the catalog item
-    public string Description { get; set; }
+    [StringLength(500, ErrorMessage = "Description cannot be longer than 500 characters")]
+    public string? Description { get; set; }
 
-    // Price of the catalog item
+    [Range(0.01, (double)decimal.MaxValue, ErrorMessage = "Price must be greater than 0")]
     public decimal Price { get; set; }
-
-    // ניתן להוסיף שדות נוספים לפי הצורך
 }

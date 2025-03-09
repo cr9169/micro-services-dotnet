@@ -21,7 +21,7 @@ public class CatalogItem
     /// <summary>
     /// The price of the catalog item.
     /// Using decimal instead of float because:
-    /// - Decimal provides exact decimal arithmetic, crucial for financial calculationsאז 
+    /// - Decimal provides exact decimal arithmetic, crucial for financial calculations
     /// - Unlike float which can have rounding errors (e.g. 0.1 + 0.2 = 0.30000001192092896),
     ///   decimal always maintains precise decimal places (0.1 + 0.2 = 0.3 exactly)
     /// </summary>

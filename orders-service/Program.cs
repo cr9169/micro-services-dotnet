@@ -1,4 +1,6 @@
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 // The first step in creating an ASP.NET Core application. The builder provides the basic infrastructure for the application and contains all the services and configuration.
 var builder = WebApplication.CreateBuilder(args);
@@ -14,12 +16,18 @@ Env.Load();
 // Adds all environment variables to the application configuration system. This allows you to access them via builder.Configuration.
 builder.Configuration.AddEnvironmentVariables();
 
+// alternative - using the data from the appsettings.json "ConnectionStrings.OrdersConnection" object.
+/* builder.Services.AddDbContext<OrdersContext>(options =>
+       options.UseSqlServer(builder.Configuration.GetConnectionString("OrdersConnection"))); */
+// db context is like a mongoose connection to mongo.
+builder.Services.AddDbContext<OrdersContext>(options => options.UseSqlServer(builder.Configuration["DB_CONNECTION_URL"]));
+
 /* Doesn't have to create a constructor in this case in AppConfig. We are "Object Initializer Syntax",
    it's a shorthand and convenient way to create and initialize an object. */
-var appConfig = new AppConfig {
+var appConfig = new AppConfig
+{
     DbConnectionUrl = builder.Configuration["DB_CONNECTION_URL"] ?? "Server=localhost;Database=DefaultDb;",
-    JwtSecret       = builder.Configuration["JWT_SECRET"]       ?? "DefaultSecretKey",
-    IpAddress       = builder.Configuration["IP_ADDRESS"]       ?? "127.0.0.1"
+    JwtSecret = builder.Configuration["JWT_SECRET"] ?? "DefaultSecretKey",
 };
 
 // Registering an AppConfig instance as a Singleton instance, so it can be injected anywhere in the system.
