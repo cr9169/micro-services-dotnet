@@ -178,7 +178,7 @@ public class CatalogItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     // Tells ASP.NET Core to get data from request body
-    public async Task<ActionResult<CatalogItem>> CreateItem([FromBody] CatalogItem item)
+    public async Task<ActionResult<CatalogItem>> CreateItem([FromBody] CatalogItemCreateDTO item)
     {
         try
         {
@@ -218,7 +218,7 @@ public class CatalogItemsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     // Tells ASP.NET Core to get data from request body
-    public async Task<ActionResult<CatalogItem>> UpdateItem(Guid id, [FromBody] CatalogItem item)
+    public async Task<ActionResult<CatalogItem>> UpdateItem(Guid id, [FromBody] CatalogItemUpdateDTO item)
     {
         try
         {

@@ -112,6 +112,8 @@ public class CatalogItemRepository : ICatalogItemRepository
             // FindAsync is like findById in Mongoose, fetching an item by its primary key
             var catalogItem = await _context.CatalogItems.FindAsync(Id);
             // Checking if the item wasn’t found (null), like if (!doc) in Node.js
+            // 'is null' provides a reliable null check that avoids potential issues with overloaded '==' operators.
+            // It is preferred in modern C# for clarity and safety.
             if (catalogItem is null)
             {
                 _logger.LogWarning("Catalog item with ID {Id} was not found", Id); // Warning is like console.warn
@@ -144,23 +146,34 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// Creates a new catalog item in the database and invalidates related cache entries.
     /// The "all_catalog_items" cache is cleared to ensure subsequent GetAllAsync calls retrieve updated data.
     /// </summary>
-    /// <param name="catalogItem">The catalog item to create.</param>
+    /// <param name="catalogItemCreateDto">The catalog item to create (DTO).</param>
     /// <returns>The created catalog item.</returns>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during creation.</exception>
-    public async Task<CatalogItem> CreateAsync(CatalogItem catalogItem)
+    public async Task<CatalogItem> CreateAsync(CatalogItemCreateDTO catalogItemCreateDto)
     {
         try
         {
             // AddAsync is like create in Mongoose, adds the item to the table
-            await _context.CatalogItems.AddAsync(catalogItem);
+            // Mapping the DTO to a new CatalogItem entity
+            var newCatalogItem = new CatalogItem
+            {
+                // If needed, generate a new Guid here, or let the DB handle the ID:
+                Id = Guid.NewGuid(),
+                Name = catalogItemCreateDto.Name,
+                Description = catalogItemCreateDto.Description,
+                Price = catalogItemCreateDto.Price
+                // Add other fields if necessary
+            };
+
             // SaveChangesAsync is like save in Mongoose, commits changes to the DB
+            await _context.CatalogItems.AddAsync(newCatalogItem);
             await _context.SaveChangesAsync();
 
             // Removing the cache for the full list since it’s changed (like cache.del in Node.js)
             _cache.Remove("all_catalog_items");
             _logger.LogInformation("Invalidated 'all_catalog_items' cache after creating new item");
 
-            return catalogItem; // Returning the created item
+            return newCatalogItem; // Returning the created item
         }
         catch (DbUpdateException ex) // Specific Entity Framework error, like a Mongoose ValidationError
         {
@@ -210,20 +223,24 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// Both the specific item cache and the "all_catalog_items" cache are cleared.
     /// </summary>
     /// <param name="id">The ID of the catalog item to update.</param>
-    /// <param name="catalogItem">The updated catalog item data.</param>
+    /// <param name="updateDto">The DTO containing the updated catalog item data (excluding the ID).</param>
     /// <returns>The updated catalog item.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during update.</exception>
-    public async Task<CatalogItem> UpdateByIdAsync(Guid id, CatalogItem catalogItem)
+    public async Task<CatalogItem> UpdateByIdAsync(Guid id, CatalogItemUpdateDTO updateDto)
     {
         try
         {
             // Ensuring the item exists before updating
             var existingItem = await GetByIdAsync(id);
-            catalogItem.Id = id; // Making sure the ID stays the same (like _id in Mongoose)
+            // Mapping the update DTO to the existing entity.
+            // The ID remains unchanged as it is provided by the route.
+            existingItem.Name = updateDto.Name;
+            existingItem.Description = updateDto.Description;
+            existingItem.Price = updateDto.Price;
 
             // Update is like findByIdAndUpdate in Mongoose, updates the item in the table
-            _context.CatalogItems.Update(catalogItem);
+            _context.CatalogItems.Update(existingItem);
             await _context.SaveChangesAsync();
 
             // Removing cache for this item and the full list
@@ -231,7 +248,7 @@ public class CatalogItemRepository : ICatalogItemRepository
             _cache.Remove("all_catalog_items");
             _logger.LogInformation("Invalidated cache for catalog item with ID {Id} and 'all_catalog_items'", id);
 
-            return catalogItem; // Returning the updated item
+            return existingItem; // Returning the updated item
         }
         catch (CatalogItemNotFoundException)
         {
