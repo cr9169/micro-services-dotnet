@@ -91,34 +91,34 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// Caching reduces database load by storing individual items for quick retrieval.
     /// Cache is set with an absolute expiration of 5 minutes and a sliding expiration of 2 minutes.
     /// </summary>
-    /// <param name="Id">The ID of the catalog item to retrieve.</param>
+    /// <param name="id">The ID of the catalog item to retrieve.</param>
     /// <returns>The catalog item with the specified ID.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during database retrieval.</exception>
-    public async Task<CatalogItem> GetByIdAsync(Guid Id)
+    public async Task<CatalogItem> GetByIdAsync(Guid id)
     {
         // Unique key for this specific item, using the Id (like template literals in JS: `catalog_item_${Id}`)
-        string cacheKey = $"catalog_item_{Id}";
+        string cacheKey = $"catalog_item_{id}";
 
         // Checking if the item is in the cache
         if (_cache.TryGetValue(cacheKey, out CatalogItem? cachedItem) && cachedItem != null)
         {
-            _logger.LogInformation("Returning catalog item with ID {Id} from cache", Id);
+            _logger.LogInformation("Returning catalog item with ID {Id} from cache", id);
             return cachedItem!; // Quick return from cache
         }
 
         try
         {
             // FindAsync is like findById in Mongoose, fetching an item by its primary key
-            var catalogItem = await _context.CatalogItems.FindAsync(Id);
+            var catalogItem = await _context.CatalogItems.FindAsync(id);
             // Checking if the item wasn’t found (null), like if (!doc) in Node.js
             // 'is null' provides a reliable null check that avoids potential issues with overloaded '==' operators.
             // It is preferred in modern C# for clarity and safety.
             if (catalogItem is null)
             {
-                _logger.LogWarning("Catalog item with ID {Id} was not found", Id); // Warning is like console.warn
+                _logger.LogWarning("Catalog item with ID {Id} was not found", id); // Warning is like console.warn
                 // Custom Exception, similar to throw new Error("Not found") in Node.js
-                throw new CatalogItemNotFoundException(Id);
+                throw new CatalogItemNotFoundException(id);
             }
 
             // Setting cache expiration for this item
@@ -127,7 +127,7 @@ public class CatalogItemRepository : ICatalogItemRepository
                 .SetSlidingExpiration(TimeSpan.FromMinutes(2)); // Cache expires if not accessed for 2 minutes
 
             _cache.Set(cacheKey, catalogItem, cacheOptions);
-            _logger.LogInformation("Cached catalog item with ID {Id} for 5 minutes", Id);
+            _logger.LogInformation("Cached catalog item with ID {Id} for 5 minutes", id);
 
             return catalogItem; // Returning from DB
         }
@@ -137,8 +137,8 @@ public class CatalogItemRepository : ICatalogItemRepository
         }
         catch (Exception ex) // Catching any other error
         {
-            _logger.LogError(ex, "Error occurred while retrieving catalog item with ID {Id}", Id);
-            throw new CatalogItemRepositoryException($"Failed to retrieve catalog item with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while retrieving catalog item with ID {Id}", id);
+            throw new CatalogItemRepositoryException($"Failed to retrieve catalog item with ID {id}", ex);
         }
     }
 
@@ -190,20 +190,20 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// <returns>The deleted catalog item.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during deletion.</exception>
-    public async Task<CatalogItem> DeleteByIdAsync(Guid Id)
+    public async Task<CatalogItem> DeleteByIdAsync(Guid id)
     {
         try
         {
             // Calling GetByIdAsync to find the item (like findById in Node.js before deleting)
-            var item = await GetByIdAsync(Id);
+            var item = await GetByIdAsync(id);
             // Remove is like deleteOne in Mongoose, removes the item from the table
             _context.CatalogItems.Remove(item);
             await _context.SaveChangesAsync();
 
             // Removing cache for this specific item and the full list
-            _cache.Remove($"catalog_item_{Id}");
+            _cache.Remove($"catalog_item_{id}");
             _cache.Remove("all_catalog_items");
-            _logger.LogInformation("Invalidated cache for catalog item with ID {Id} and 'all_catalog_items'", Id);
+            _logger.LogInformation("Invalidated cache for catalog item with ID {Id} and 'all_catalog_items'", id);
 
             return item; // Returning the deleted item
         }
@@ -213,8 +213,8 @@ public class CatalogItemRepository : ICatalogItemRepository
         }
         catch (Exception ex) // Catching any other error (e.g., DB issues)
         {
-            _logger.LogError(ex, "Error occurred while deleting catalog item with ID {Id}", Id);
-            throw new CatalogItemRepositoryException($"Failed to delete catalog item with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while deleting catalog item with ID {Id}", id);
+            throw new CatalogItemRepositoryException($"Failed to delete catalog item with ID {id}", ex);
         }
     }
 
@@ -270,12 +270,12 @@ public class CatalogItemRepository : ICatalogItemRepository
     /// <returns>The updated catalog item.</returns>
     /// <exception cref="CatalogItemNotFoundException">Thrown when the item is not found.</exception>
     /// <exception cref="CatalogItemRepositoryException">Thrown when an error occurs during patching.</exception>
-    public async Task<CatalogItem> PatchByIdAsync(Guid Id, CatalogItemPatchDTO catalogItemDetails)
+    public async Task<CatalogItem> PatchByIdAsync(Guid id, CatalogItemPatchDTO catalogItemDetails)
     {
         try
         {
             // Ensuring the item exists
-            var existingItem = await GetByIdAsync(Id);
+            var existingItem = await GetByIdAsync(id);
 
             // Partial update (patch) - like $set in Mongoose, only updating provided fields
             if (catalogItemDetails.Name != null)
@@ -288,9 +288,9 @@ public class CatalogItemRepository : ICatalogItemRepository
             await _context.SaveChangesAsync();
 
             // Removing cache for this item and the full list
-            _cache.Remove($"catalog_item_{Id}");
+            _cache.Remove($"catalog_item_{id}");
             _cache.Remove("all_catalog_items");
-            _logger.LogInformation("Invalidated cache for catalog item with ID {Id} and 'all_catalog_items'", Id);
+            _logger.LogInformation("Invalidated cache for catalog item with ID {Id} and 'all_catalog_items'", id);
 
             return existingItem; // Returning the updated item
         }
@@ -300,8 +300,8 @@ public class CatalogItemRepository : ICatalogItemRepository
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError(ex, "Error occurred while patching catalog item with ID {Id}", Id);
-            throw new CatalogItemRepositoryException($"Failed to patch catalog item with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while patching catalog item with ID {Id}", id);
+            throw new CatalogItemRepositoryException($"Failed to patch catalog item with ID {id}", ex);
         }
     }
 }

@@ -1,9 +1,9 @@
 public interface ICatalogItemRepository
 {
     Task<IEnumerable<CatalogItem>> GetAllAsync();
-    Task<CatalogItem> GetByIdAsync(Guid Id);
+    Task<CatalogItem> GetByIdAsync(Guid id);
     Task<CatalogItem> CreateAsync(CatalogItemCreateDTO catalogItemCreateDto); // שימוש ב-DTO ליצירה
-    Task<CatalogItem> DeleteByIdAsync(Guid Id);
-    Task<CatalogItem> UpdateByIdAsync(Guid Id, CatalogItemUpdateDTO catalogItemUpdateDto); // DTO לעדכון מלא
-    Task<CatalogItem> PatchByIdAsync(Guid Id, CatalogItemPatchDTO catalogItemPatchDto);    // DTO לעדכון חלקי
+    Task<CatalogItem> DeleteByIdAsync(Guid id);
+    Task<CatalogItem> UpdateByIdAsync(Guid id, CatalogItemUpdateDTO catalogItemUpdateDto); // DTO לעדכון מלא
+    Task<CatalogItem> PatchByIdAsync(Guid id, CatalogItemPatchDTO catalogItemPatchDto);    // DTO לעדכון חלקי
 }

@@ -131,8 +131,8 @@ public class ErrorHandlingMiddleware
         */
         context.Response.StatusCode = ex switch
         {
-            CatalogItemNotFoundException => StatusCodes.Status404NotFound,
-            CatalogItemRepositoryException => StatusCodes.Status500InternalServerError,
+            OrderNotFoundException => StatusCodes.Status404NotFound,
+            OrderRepositoryException => StatusCodes.Status500InternalServerError,
             _ => StatusCodes.Status500InternalServerError
         };
 

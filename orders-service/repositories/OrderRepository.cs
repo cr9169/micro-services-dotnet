@@ -15,7 +15,7 @@ public class OrderRepository : IOrderRepository
         _cache = cache;
     }
 
-    public async Task<IEnumerable<Order>> getAllAsync()
+    public async Task<IEnumerable<Order>> GetAllAsync()
     {
         string cacheKey = "all_orders";
 
@@ -45,25 +45,25 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-    public async Task<Order> GetByIdAsync(Guid Id)
+    public async Task<Order> GetByIdAsync(Guid id)
     {
-        string cacheKey = $"order_{Id}";
+        string cacheKey = $"order_{id}";
 
         if (_cache.TryGetValue(cacheKey, out Order? cachedOrder) && cachedOrder != null)
         {
-            _logger.LogInformation("Returning order with ID {Id} from cache", Id);
+            _logger.LogInformation("Returning order with ID {id} from cache", id);
             return cachedOrder;
         }
 
         try
         {
 
-            var order = await _context.Orders.FindAsync(Id);
+            var order = await _context.Orders.FindAsync(id);
 
             if (order is null)
             {
-                _logger.LogWarning("Order with ID {Id} was not found", Id);
-                throw new OrderNotFoundException(Id);
+                _logger.LogWarning("Order with ID {id} was not found", id);
+                throw new OrderNotFoundException(id);
             }
 
             var cacheOptions = new MemoryCacheEntryOptions()
@@ -71,7 +71,7 @@ public class OrderRepository : IOrderRepository
                 .SetSlidingExpiration(TimeSpan.FromMinutes(2));
 
             _cache.Set(cacheKey, order, cacheOptions);
-            _logger.LogInformation("Cached order with ID {Id} for 5 minutes", Id);
+            _logger.LogInformation("Cached order with ID {id} for 5 minutes", id);
 
             return order;
         }
@@ -81,8 +81,8 @@ public class OrderRepository : IOrderRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while retrieving order with ID {Id}", Id);
-            throw new OrderRepositoryException($"Failed to retrieve order with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while retrieving order with ID {id}", id);
+            throw new OrderRepositoryException($"Failed to retrieve order with ID {id}", ex);
         }
     }
 
@@ -113,18 +113,18 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-    public async Task<Order> DeleteByIdAsync(Guid Id)
+    public async Task<Order> DeleteByIdAsync(Guid id)
     {
         try
         {
-            var order = await GetByIdAsync(Id);
+            var order = await GetByIdAsync(id);
 
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
 
-            _cache.Remove($"order_{Id}");
+            _cache.Remove($"order_{id}");
             _cache.Remove("all_orders");
-            _logger.LogInformation("Invalidated cache for order with ID {Id} and 'all_orders'", Id);
+            _logger.LogInformation("Invalidated cache for order with ID {id} and 'all_orders'", id);
 
             return order;
 
@@ -135,26 +135,26 @@ public class OrderRepository : IOrderRepository
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while deleting order with ID {Id}", Id);
-            throw new OrderRepositoryException($"Failed to delete order with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while deleting order with ID {id}", id);
+            throw new OrderRepositoryException($"Failed to delete order with ID {id}", ex);
         }
     }
 
-    public async Task<Order> PatchByIdAsync(Guid Id, OrderSharedDTO orderSharedDTO)
+    public async Task<Order> PatchByIdAsync(Guid id, OrderSharedDTO orderSharedDTO)
     {
         try
         {
 
-            var existingOrder = await GetByIdAsync(Id);
+            var existingOrder = await GetByIdAsync(id);
 
             if (orderSharedDTO.CustomerName != null)
                 existingOrder.CustomerName = orderSharedDTO.CustomerName;
 
             await _context.SaveChangesAsync();
 
-            _cache.Remove($"order_{Id}");
+            _cache.Remove($"order_{id}");
             _cache.Remove("all_orders");
-            _logger.LogInformation("Invalidated cache for order with ID {Id} and 'all_orders'", Id);
+            _logger.LogInformation("Invalidated cache for order with ID {id} and 'all_orders'", id);
 
             return existingOrder;
         }
@@ -164,16 +164,16 @@ public class OrderRepository : IOrderRepository
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError(ex, "Error occurred while patching catalog item with ID {Id}", Id);
-            throw new OrderRepositoryException($"Failed to patch catalog item with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while patching catalog item with ID {id}", id);
+            throw new OrderRepositoryException($"Failed to patch catalog item with ID {id}", ex);
         }
     }
 
-    public async Task<Order> UpdateByIdAsync(Guid Id, OrderSharedDTO orderSharedDTO)
+    public async Task<Order> UpdateByIdAsync(Guid id, OrderSharedDTO orderSharedDTO)
     {
         try
         {
-            var existingOrder = await GetByIdAsync(Id);
+            var existingOrder = await GetByIdAsync(id);
 
             if (orderSharedDTO.CustomerName != null)
                 existingOrder.CustomerName = orderSharedDTO.CustomerName;
@@ -181,9 +181,9 @@ public class OrderRepository : IOrderRepository
             _context.Orders.Update(existingOrder);
             await _context.SaveChangesAsync();
 
-            _cache.Remove($"order_{Id}");
+            _cache.Remove($"order_{id}");
             _cache.Remove("all_orders");
-            _logger.LogInformation("Invalidated cache for order with ID {Id} and 'all_orders'", Id);
+            _logger.LogInformation("Invalidated cache for order with ID {id} and 'all_orders'", id);
 
             return existingOrder;
         }
@@ -193,8 +193,8 @@ public class OrderRepository : IOrderRepository
         }
         catch (DbUpdateException ex)
         {
-            _logger.LogError(ex, "Error occurred while updating order with ID {Id}", Id);
-            throw new OrderRepositoryException($"Failed to update order with ID {Id}", ex);
+            _logger.LogError(ex, "Error occurred while updating order with ID {id}", id);
+            throw new OrderRepositoryException($"Failed to update order with ID {id}", ex);
         }
     }
 }
