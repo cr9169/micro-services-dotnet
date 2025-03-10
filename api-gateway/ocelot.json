@@ -1,0 +1,74 @@
+{
+    "Routes": [
+      {
+        "DownstreamPathTemplate": "/api/orders/{everything}",
+        "DownstreamScheme": "https",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "orders-service",
+            "Port": 443
+          }
+        ],
+        "UpstreamPathTemplate": "/api/orders/{everything}",
+        "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+        "SwaggerKey": "orders",
+        "RateLimitOptions": {
+          "ClientWhitelist": [],
+          "EnableRateLimiting": true,
+          "Period": "1m",
+          "PeriodTimespan": 60,
+          "Limit": 30
+        },
+        "FileCacheOptions": {
+          "TtlSeconds": 15
+        }
+      },
+      {
+        "DownstreamPathTemplate": "/api/catalog/{everything}",
+        "DownstreamScheme": "https",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "catalog-service",
+            "Port": 443
+          }
+        ],
+        "UpstreamPathTemplate": "/api/catalog/{everything}",
+        "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+        "SwaggerKey": "catalog",
+        "AuthenticationOptions": {
+          "AuthenticationProviderKey": "Bearer"
+        }
+      }
+    ],
+    "SwaggerEndPoints": [
+      {
+        "Key": "orders",
+        "Config": [
+          {
+            "Name": "Orders API",
+            "Version": "v1",
+            "Url": "https://orders-service/swagger/v1/swagger.json"
+          }
+        ]
+      },
+      {
+        "Key": "catalog",
+        "Config": [
+          {
+            "Name": "Catalog API",
+            "Version": "v1",
+            "Url": "https://catalog-service/swagger/v1/swagger.json"
+          }
+        ]
+      }
+    ],
+    "GlobalConfiguration": {
+      "BaseUrl": "https://api.yourdomain.com",
+      "RequestIdKey": "RequestId",
+      "RateLimitOptions": {
+        "DisableRateLimitHeaders": false,
+        "QuotaExceededMessage": "Rate limit exceeded. Please try again later.",
+        "HttpStatusCode": 429
+      }
+    }
+  }
