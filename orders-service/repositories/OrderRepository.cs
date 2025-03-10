@@ -86,7 +86,7 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-    public async Task<Order> CreateAsync(OrderSharedDTO orderSharedDTO)
+    public async Task<Order> CreateAsync(OrderCreateDTO orderCreateDTO)
     {
         try
         {
@@ -94,7 +94,7 @@ public class OrderRepository : IOrderRepository
             var newOrder = new Order
             {
                 Id = Guid.NewGuid(),
-                CustomerName = orderSharedDTO.CustomerName,
+                CustomerName = orderCreateDTO.CustomerName,
                 OrderDate = DateTime.Now
             };
 
