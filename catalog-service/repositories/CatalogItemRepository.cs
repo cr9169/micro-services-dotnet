@@ -52,11 +52,11 @@ public class CatalogItemRepository : ICatalogItemRepository
 
         // Checking if the data is already in the cache (similar to cache.get in Node.js)
         // TryGetValue returns true if the key exists and fills the cachedItems variable with the cached data
-        if (_cache.TryGetValue(cacheKey, out IEnumerable<CatalogItem> cachedItems))
+        if (_cache.TryGetValue(cacheKey, out IEnumerable<CatalogItem>? cachedItems) && cachedItems != null)
         {
             // Logging that we're using the cache, like console.log in Node.js
             _logger.LogInformation("Returning all catalog items from cache");
-            return cachedItems; // Returning directly from cache, faster than hitting the DB
+            return cachedItems!; // Returning directly from cache, faster than hitting the DB
         }
 
         // If not in cache, fetch from the database
@@ -101,10 +101,10 @@ public class CatalogItemRepository : ICatalogItemRepository
         string cacheKey = $"catalog_item_{Id}";
 
         // Checking if the item is in the cache
-        if (_cache.TryGetValue(cacheKey, out CatalogItem cachedItem))
+        if (_cache.TryGetValue(cacheKey, out CatalogItem? cachedItem) && cachedItem != null)
         {
             _logger.LogInformation("Returning catalog item with ID {Id} from cache", Id);
-            return cachedItem; // Quick return from cache
+            return cachedItem!; // Quick return from cache
         }
 
         try
